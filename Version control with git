@@ -1,0 +1,174 @@
+Version Control with Git in DevOps
+
+In DevOps, Git plays a crucial role in managing code, automating deployments, and ensuring smooth collaboration between development and operations teams. It enables Continuous Integration (CI) and Continuous Deployment (CD) by tracking changes, managing branches, and integrating with CI/CD pipelines.
+
+
+---
+
+Key Concepts of Git in DevOps
+
+1. Git Workflow in DevOps
+
+A structured Git workflow ensures efficient collaboration. Common workflows include:
+
+Feature Branching Workflow: Each new feature or fix is developed in a separate branch.
+
+GitFlow Workflow: Uses dedicated branches (develop, main, feature, release, hotfix).
+
+Trunk-Based Development: Developers commit frequently to the main branch with feature flags.
+
+
+Example workflow:
+
+1. Clone the repository:
+
+git clone <repo-url>
+cd <repo-name>
+
+
+2. Create a feature branch:
+
+git checkout -b feature-branch
+
+
+3. Make changes, add, and commit:
+
+git add .
+git commit -m "Added new feature"
+
+
+4. Push the changes and create a pull request (PR):
+
+git push origin feature-branch
+
+
+
+
+---
+
+2. Git in CI/CD Pipelines
+
+Git integrates with CI/CD tools like Jenkins, GitHub Actions, GitLab CI/CD, Azure DevOps, and CircleCI to automate testing, building, and deployment.
+
+CI (Continuous Integration):
+
+Every commit triggers automated builds and tests.
+
+Git hooks (pre-commit, post-commit) ensure quality checks.
+
+
+CD (Continuous Deployment/Delivery):
+
+Merges to main trigger automated deployments.
+
+Rollbacks are managed using Git tags and versioning.
+
+
+
+Example: GitHub Actions CI/CD Pipeline (.github/workflows/main.yml):
+
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
+
+
+---
+
+3. Git Hooks for Automation
+
+Git hooks automate tasks before or after actions like commits and pushes.
+
+Pre-commit hook (run checks before committing):
+
+# .git/hooks/pre-commit
+#!/bin/sh
+npm test || exit 1
+
+This ensures tests pass before committing.
+
+Post-receive hook (trigger deployment after push):
+
+# .git/hooks/post-receive
+#!/bin/sh
+git --work-tree=/var/www/app --git-dir=/home/git/repo checkout -f
+systemctl restart apache2
+
+
+
+---
+
+4. Git Tagging for Version Control
+
+Tags mark specific versions for release management.
+
+Create a tag:
+
+git tag v1.0.0
+
+Push a tag:
+
+git push origin v1.0.0
+
+List tags:
+
+git tag
+
+
+
+---
+
+5. GitOps: Infrastructure as Code (IaC) with Git
+
+GitOps is a DevOps practice where infrastructure is managed using Git.
+
+Store Terraform, Ansible, Kubernetes YAMLs in Git.
+
+Git changes trigger infrastructure updates via ArgoCD, FluxCD, or Jenkins.
+
+Example GitOps workflow:
+
+Developer updates Kubernetes YAML in Git.
+
+CI/CD pipeline applies changes to the cluster.
+
+
+
+Example: Apply Kubernetes manifests on Git push:
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply Kubernetes manifests
+        run: kubectl apply -f k8s/
+
+
+---
+
+Best Practices for Git in DevOps
+
+✔️ Follow branching strategies (GitFlow, feature branches).
+✔️ Use Git hooks for code quality checks.
+✔️ Implement CI/CD pipelines with Git triggers.
+✔️ Use GitOps for infrastructure automation.
+✔️ Tag releases and use semantic version
